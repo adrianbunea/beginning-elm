@@ -3,31 +3,59 @@ module Playground exposing (main)
 import Html
 
 
-escapeEarth myVelocity mySpeed fuelStatus =
-    let
-        escapeVelocityInKmPerSec = 11.186
-        orbitalSpeedInKmPerSec = 7.67
-        whereToLand =
-          if fuelStatus == "low" then
-              "Land on droneship"
-          else
-              "Land on launchpad"
-    in
-    if myVelocity > escapeVelocityInKmPerSec then
-        "Godspeed"
+weekday dayInNumber =
+    case dayInNumber of
+        0 ->
+            "Sunday"
 
-    else if mySpeed == orbitalSpeedInKmPerSec then
-        "Stay in orbit"
+        1 ->
+            "Monday"
 
-    else
-        whereToLand
+        2 ->
+            "Tuesday"
 
-computeSpeed distance time =
-    distance / time
+        3 ->
+            "Wednesday"
 
-computeTime startTime endTime =
-    endTime - startTime
+        4 ->
+            "Thursday"
 
-main = 
-    escapeEarth 10 6.7 "low"
-        |> Html.text
+        5 ->
+            "Friday"
+
+        6 ->
+            "Saturday"
+
+        _ ->
+            "Unknown day"
+
+
+hashtag dayInNumber =
+    case weekday dayInNumber of
+        "Sunday" ->
+            "#Sinday"
+
+        "Monday" ->
+            "#MondayBlues"
+
+        "Tuesday" ->
+            "#TakeMeBackTuesday"
+
+        "Wednesday" ->
+            "#HumpDay"
+
+        "Thursday" ->
+            "#ThrowbackThursday"
+
+        "Friday" ->
+            "#Flashbackfriday"
+
+        "Saturday" ->
+            "#Caturday"
+
+        _ ->
+            "#Whatever"
+
+
+main =
+    Html.text <| hashtag 0
