@@ -1,61 +1,34 @@
 module Playground exposing (main)
 
+import Array
 import Html
+import Regex
 
 
-weekday dayInNumber =
-    case dayInNumber of
-        0 ->
-            "Sunday"
-
-        1 ->
-            "Monday"
-
-        2 ->
-            "Tuesday"
-
-        3 ->
-            "Wednesday"
-
-        4 ->
-            "Thursday"
-
-        5 ->
-            "Friday"
-
-        6 ->
-            "Saturday"
-
-        _ ->
-            "Unknown day"
+pattern =
+    "\\d\\d:\\d\\d (a\\.m\\.|p\\.m\\.)"
 
 
-hashtag dayInNumber =
-    case weekday dayInNumber of
-        "Sunday" ->
-            "#Sinday"
+maybeRegex =
+    Regex.fromString pattern
 
-        "Monday" ->
-            "#MondayBlues"
 
-        "Tuesday" ->
-            "#TakeMeBackTuesday"
+regex =
+    Maybe.withDefault Regex.never maybeRegex
 
-        "Wednesday" ->
-            "#HumpDay"
 
-        "Thursday" ->
-            "#ThrowbackThursday"
+apollo11 =
+    """
+    On July 16, 1969, the massive Saturn V rocket
+    lifted off from NASA's Kennedy Space Center at
+    09:32 a.m. EDT. Four days later, on July 20, Neil
+    Armstrong and Buzz Aldrin landed on the Moon.
+    """
 
-        "Friday" ->
-            "#Flashbackfriday"
 
-        "Saturday" ->
-            "#Caturday"
-
-        _ ->
-            "#Whatever"
+launchTimes =
+    Regex.find regex apollo11
 
 
 main =
-    Html.text <| hashtag 0
+    Html.text <| Maybe.withDefault "No launch time" <| List.head <| List.map (\launchTime -> launchTime.match) launchTimes
