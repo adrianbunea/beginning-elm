@@ -1,34 +1,39 @@
-module RippleCarryAdder exposing ( rippleCarryAdder )
+module RippleCarryAdder exposing (andGate, fullAdder, halfAdder, inverter, orGate, rippleCarryAdder)
 
-import Bitwise
-import Array
 import Array exposing (Array)
+import Bitwise
+
 
 andGate : Int -> Int -> Int
 andGate a b =
     Bitwise.and a b
 
+
 orGate : Int -> Int -> Int
 orGate a b =
     Bitwise.or a b
+
 
 inverter : Int -> Int
 inverter a =
     case a of
         0 ->
             1
+
         1 ->
             0
+
         _ ->
             -1
 
-halfAdder : Int -> Int -> { carry: Int, sum: Int }
+
+halfAdder : Int -> Int -> { carry : Int, sum : Int }
 halfAdder a b =
     let
         d =
             orGate a b
 
-        e = 
+        e =
             andGate a b
                 |> inverter
 
@@ -42,12 +47,13 @@ halfAdder a b =
     , sum = sumDigit
     }
 
-fullAdder : Int -> Int -> Int -> { carry: Int, sum: Int }
+
+fullAdder : Int -> Int -> Int -> { carry : Int, sum : Int }
 fullAdder a b carryIn =
     let
         firstResult =
             halfAdder b carryIn
-        
+
         secondResult =
             halfAdder a firstResult.sum
 
@@ -58,12 +64,14 @@ fullAdder a b carryIn =
     , sum = secondResult.sum
     }
 
+
 type alias Binary =
-    { d0: Int
-    , d1: Int
-    , d2: Int
-    , d3: Int
+    { d0 : Int
+    , d1 : Int
+    , d2 : Int
+    , d3 : Int
     }
+
 
 rippleCarryAdder : Int -> Int -> Int -> Int
 rippleCarryAdder a b carryIn =
@@ -93,12 +101,14 @@ rippleCarryAdder a b carryIn =
         |> (::) finalResult.carry
         |> numberFromDigits
 
+
 extractDigits : Int -> Binary
 extractDigits number =
     digits number
         |> padZeros 4
         |> Array.fromList
         |> arrayToRecord
+
 
 arrayToRecord : Array Int -> Binary
 arrayToRecord array =
@@ -125,9 +135,11 @@ arrayToRecord array =
     , d3 = fourthElement
     }
 
+
 numberFromDigits : List Int -> Int
 numberFromDigits digitsList =
     List.foldl (\digit number -> digit + 10 * number) 0 digitsList
+
 
 digits : Int -> List Int
 digits number =
@@ -136,10 +148,12 @@ digits number =
             if n == 0 then
                 []
 
-            else remainderBy 10 n :: getDigits (n // 10)
+            else
+                remainderBy 10 n :: getDigits (n // 10)
     in
     getDigits number
         |> List.reverse
+
 
 padZeros : Int -> List Int -> List Int
 padZeros total list =
